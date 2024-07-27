@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/img/favicon.ico">
+    <title>Preclinic - Medical & Hospital - Bootstrap 4 Admin Template</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <style>
+    .highlighted {
+    background-color: lightblue;
+}
+    
+    </style>
+    <!--[if lt IE 9]>
+        <script src="/static/js/html5shiv.min.js"></script>
+        <script src="/static/js/respond.min.js"></script>
+    <![endif]-->
+    
+</head>
+<body>
+    <div class="main-wrapper">
+        <div class="header">
+            <div style="text-align: center;">
+                <a href="dashboard.html" class="logo">
+                    <img src="/static/img/logo.png" width="35" height="35" alt=""> <span>Colors Hospital</span>
+                </a>
+            </div>
+        </div>
+
+    <table class="table" style="margin-top: 70px;">
+    <thead class="thead-light">
+     <tr class="table-primary">
+         <th scope="col" class="text-uppercase font-weight-bold" style="background-color: #003366; color: #ffffff;">Sr. No</th>
+    <th scope="col" class="text-uppercase font-weight-bold" style="background-color: #003366; color: #ffffff;">Doctor Name</th>
+    <th scope="col" class="text-uppercase font-weight-bold" style="background-color: #003366; color: #ffffff;">Patient ID</th>
+    <th scope="col" class="text-uppercase font-weight-bold" style="background-color: #003366; color: #ffffff;">Patient Name</th>
+
+</tr>
+
+    </thead>
+    <tbody id="tableBody">
+     
+    </tbody>
+</table>
+    </div>
+    
+    
+
+    <script src="/static/js/jquery-3.2.1.min.js"></script>
+    <script src="/static/js/popper.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/jquery.slimscroll.js"></script>
+    <script src="/static/js/Chart.bundle.js"></script>
+    <script src="/static/js/chart.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script>
+    function bindData() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/getappointmentdetails", true);
+        xhr.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+        //xhr.setRequestHeader("Api-Key", getToken());
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                var responseData = JSON.parse(xhr.responseText);
+                var tableBody = document.getElementById('tableBody');
+                var html = '';
+
+                responseData.forEach(function (item, index) {
+                    html += `
+                        <tr${index === 0 ? ' class="highlighted active"' : ''}>
+                            <td>${index + 1}</td>
+                            <td>${item.doctor}</td>
+                            <td>${item.id}</td>
+                            <td>${item.patient.firstname}</td>
+                        </tr>`;
+                });
+
+
+                tableBody.innerHTML = html;
+            } else {
+                console.error("Request failed with status:", xhr.status);
+            }
+        };
+
+        xhr.onerror = function () {
+            console.error("Request failed");
+        };
+
+        xhr.send();
+    }
+
+    window.onload = function() {
+        bindData();
+        setInterval(bindData, 60000); 
+    };
+
+    </script>
+</body>
+</html>
